@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="
+en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      const canvas = document.querySelector('#canvas')
+      canvas.width = 600
+      canvas.height = 600
+      const cxt = canvas.getContext('2d')
+      const FONT_WEIGHT = 15
+      const MARGIN = 35
+      const HAND_TRUNCATION = canvas.width / 25
+      const HOUR_HAND_TRUNCATION = canvas.width / 10 
+      const NUMBERAL_SPACING = 20
+      const RADIUS = canvas.width / 2 - MARGIN
+      const HAND_RADIUS = RADIUS + NUMBERAL_SPACING
+
+      function drawCircle () {
+        cxt.beginPath()
+        // x, y 圆心，开始角度，结束角度, true为逆时针
+        cxt.arc(canvas.width / 2, canvas.height / 2, RADIUS, 0, Math.PI * 2, true)
+        cxt.stroke()
+      }
+
+      function drawNumberals () {
+        let numberals = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        let angle = 0
+        let numeralWidth = 0 
+
+        numberals.forEach(num => {
+          angle = Math.PI / 6 * (num - 3)
+          numeralWidth = cxt.measureText(num).width
+          cxt.fillText(num, 
+            canvas.width / 2 + Math.cos(angle) * (HAND_RADIUS) - numeralWidth / 2,
+            canvas.height / 2 + Math.sin(angle) * (HAND_RADIUS) + FONT_WEIGHT / 3
+          )
+        })
+      }
+
+      // 圆心
+      function drawCenter () {
+        cxt.beginPath()
+        cxt.arc(canvas.width / 2, canvas.height / 2, 5, 0, Math.PI * 2, true)
+        cxt.fill()
+      }
+
+      function drawHand (loc, isHour) {
+        let angle = (Math.PI * 2) * (loc / 60) - Math.PI / 2
+        // handRadius为偏转的角度
+        let handRadius = isHour ? RADIUS - HAND_TRUNCATION - HOUR_HAND_TRUNCATION
+                                : RADIUS - HAND_TRUNCATION
+        cxt.moveTo(canvas.width / 2, canvas.height / 2)                
+        cxt.lineTo(canvas.width / 2 + Math.cos(angle) * handRadius,
+                    canvas.height / 2 + Math.sin(angle) * handRadius)
+        cxt.stroke()
+      }
+
+      function drawHands () {
+        let date = new Date()
+        let hour = date.getHours()
+        hour = hour > 12 ? hour - 12 : hour 
+
+        drawHand(hour * 5 + (date.getMinutes() / 60) * 5, true, 0.5)
+        drawHand(date.getMinutes(), false, .5)
+        drawHand(date.getSeconds(), false, .5)
+      }
+
+      function drawClock () {
+        cxt.clearRect(0, 0, canvas.width, canvas.height)
+
+        drawCircle()
+        drawCenter()
+        drawHands()
+        drawNumberals()
+      }
+
+      cxt.font = FONT_WEIGHT + 'px Arial'
+      let loop = setInterval(drawClock, 1000)
+    </script>
+  </body>
+</html>
