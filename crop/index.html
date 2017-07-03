@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      ul, li {
+        list-style: none;
+      }
+      .box-wrapper {
+        width: 600px;
+        height: 600px;
+        margin: 0 auto
+      }
+      .list-wrapper {
+
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box-wrapper">
+      <canvas id="box"></canvas>
+    </div>
+    <div class="list-wrapper">
+      <ul class="list-ul">
+        <li class="list-li">
+          <input type="range" class="scale" max="10" min="1" defaultValue="1">
+        </li>
+        <li class="list-li">
+          <input type="file" class="file">
+        </li>
+        <li class="list-li"></li>
+      </ul>
+    </div>
+    <script src="./index.js">
+      
+    </script>
+  </body>
+</html>
