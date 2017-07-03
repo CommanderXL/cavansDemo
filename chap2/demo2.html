@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <canvas id="app"></canvas>
+    <script>
+      let canvas = document.querySelector('#app')
+      let ctx = canvas.getContext('2d')
+      let gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+
+      gradient.addColorStop(0, 'blue')
+      gradient.addColorStop(0.25, 'white')
+      gradient.addColorStop(.5, 'purple')
+      gradient.addColorStop(.75, 'red')
+      gradient.addColorStop(1, 'yellow')
+
+      ctx.fillStyle = gradient
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+    </script>
+  </body>
+</html>
