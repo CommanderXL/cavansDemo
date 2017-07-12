@@ -26,19 +26,21 @@
 
     .wrapper {
       position: relative;
+      width: 600px;
+      height: 600px;
     }   
 
     .clip-box {
       position: absolute;
       border: 1px dashed #fff;
-      z-index: 100;
+      z-index: 103;
     }
     .clip-box .clip-circle {
       position: absolute;
       width: 4px;
       height: 4px;
       border-radius: 50%;
-      z-index: 101;
+      z-index: 103;
       background-color: #256ea8;
       cursor: move;
     }
@@ -59,12 +61,24 @@
       bottom: -2px;
       left: -2px;
     }
+    .wrapper-mask {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #333;
+      opacity: .3;
+      z-index: 101;
+      display: none;
+    }
   </style>
   <body>
     <ul class="op-ul">
       <li class="op-li">裁剪</li>
     </ul>
     <div class="wrapper">
+      <div class="wrapper-mask"></div>
       <div class="clip-box">
         <span class="clip-circle first-circle"></span>
         <span class="clip-circle second-circle"></span>
@@ -73,6 +87,7 @@
       </div>
       <canvas id="canvas"></canvas>
     </div>
+    <img src="" alt="" class="test">
     <script src="./util.js"></script>
     <script src="./index.js"></script>
   </body>
