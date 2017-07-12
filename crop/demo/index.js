@@ -81,32 +81,34 @@
         let dy = movingPointer.y - startPointer.y
         let distW = clipBoxStyle.width
         let distH = clipBoxStyle.height
+        let distX = clipBoxStyle.x
+        let distY = clipBoxStyle.y
 
         if (clipParams.activeCorner) {
           if (hasClass(target, 'first-circle')) {
             dw = -dw
             dh = -dh
-            params.x = clipBoxStyle.x + dx
-            params.y = clipBoxStyle.y + dy
+            distX = params.x = clipBoxStyle.x + dx
+            distY = params.y = clipBoxStyle.y + dy
           } else if (hasClass(target, 'second-circle')) {
             dh = -dh
-            params.y = clipBoxStyle.y + dy
+            distY = params.y = clipBoxStyle.y + dy
           } else if (hasClass(target, 'third-circle')) {
 
           } else if (hasClass(target, 'fourth-circle')) {
             dw = -dw
-            params.x = clipBoxStyle.x + dx
+            distX = params.x = clipBoxStyle.x + dx
           }
           distW = params.width = clipBoxStyle.width + dw
           distH = params.height = clipBoxStyle.height + dh
         } else {
-          params.x = clipBoxStyle.x + dx
-          params.y = clipBoxStyle.y + dy
+          distX = params.x = clipBoxStyle.x + dx
+          distY = params.y = clipBoxStyle.y + dy
         }       
         setClipCircle(params)
         setClipBoxBg({
-          x: clipBoxStyle.x + dx,
-          y: clipBoxStyle.y + dy,
+          x: distX,
+          y: distY,
           width: distW,
           height: distH
         })
@@ -121,6 +123,7 @@
           width: params.width,
           height: params.height
         })
+        clipParams.activeCorner = false
       } else {
         setClipBoxStyle({
           x: params.x,
@@ -138,6 +141,7 @@
     let testImage = document.querySelector('.test')
     testImage.src = oCanvas.toDataURL()
     clipBox.style.backgroundImage = `url(${oCanvas.toDataURL()})`
+    // oContext.clearRect(0, 0, width, height)
   }
 
   function setClipBoxStyle (options) {
