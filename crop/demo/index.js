@@ -13,10 +13,10 @@
     height: 100
   }
   let clipParams = {
-    dragging: false
+    dragging: false,
+    activeCorner: false
   }
 
-  let ACTIVE_CORNER = ['lt', 'rt', 'rb', 'lb']
   canvas.width = 600
   canvas.height = 600
 
@@ -42,6 +42,7 @@
     let startPointer
     let movingPointer
     let activeCorner
+    let params
 
     setClipCircle(clipBoxStyle)
 
@@ -52,37 +53,44 @@
         x: e.clientX,
         y: e.clientY
       })
-      if (hasClass(target, 'first-circle')) {
-        activeCorner = ACTIVE_CORNER[0]
-      } else if (hasClass(target, 'second-circle')) {
-        activeCorner = ACTIVE_CORNER[1]
-      } else if (hasClass(target, 'third-circle')) {
-        activeCorner = ACTIVE_CORNER[2]
-      } else if (hasClass(target, 'fourth-circle')) {
-        activeCorner = ACTIVE_CORNER[3]
+      if (hasClass(target, 'clip-circle')) {
+        clipParams.activeCorner = true
       }
     }
 
     document.onmousemove = function (e) {
       e.preventDefault()
       if (clipParams.dragging) {
-        let params = {}
+        params = {}
+
         movingPointer = windowToCanvas({
           x: e.clientX,
           y: e.clientY
         })
-        params.x = clipBoxStyle.x + (movingPointer.x - startPointer.x)
-        params.y = clipBoxStyle.y + (movingPointer.y - startPointer.y)
-        if (activeCorner === 'lt') {
-          params.width = clipBoxStyle.width - (movingPointer.x - startPointer.x)
-          params.height = clipBoxStyle.height - (movingPointer.y - startPointer.y)
-        } else if (activeCorner === 'rt') {
-          
-        } else if (activeCorner === 'rb') {
 
-        } else if (activeCorner === 'lb') {
+        if (clipParams.activeCorner) {
+          let dx = movingPointer.x - startPointer.x
+          let dy = movingPointer.y - startPointer.y
+          if (hasClass(target, 'first-circle')) {
+            dx = -dx
+            dy = -dy
+            params.x = clipBoxStyle.x + (movingPointer.x - startPointer.x)
+            params.y = clipBoxStyle.y + (movingPointer.y - startPointer.y)
+          } else if (hasClass(target, 'second-circle')) {
+            dy = -dy
+            params.y = clipBoxStyle.y + (movingPointer.y - startPointer.y)
+          } else if (hasClass(target, 'third-circle')) {
 
-        }
+          } else if (hasClass(target, 'fourth-circle')) {
+            dx = -dx
+            params.x = clipBoxStyle.x + (movingPointer.x - startPointer.x)
+          }
+          params.width = clipBoxStyle.width + dx
+          params.height = clipBoxStyle.height + dy
+        } else {
+          params.x = clipBoxStyle.x + (movingPointer.x - startPointer.x)
+          params.y = clipBoxStyle.y + (movingPointer.y - startPointer.y)
+        }       
         setClipCircle(params)
         return false
       }
@@ -90,10 +98,17 @@
 
     document.onmouseup = function (e) {
       clipParams.dragging = false
-      setClipBoxStyle({
-        x: clipBoxStyle.x + (movingPointer.x - startPointer.x),
-        y: clipBoxStyle.y + (movingPointer.y - startPointer.y)
-      })
+      if (clipParams.activeCorner) {
+        setClipBoxStyle({
+          width: params.width,
+          height: params.height
+        })
+      } else {
+        setClipBoxStyle({
+          x: params.x,
+          y: params.y
+        })
+      }
     }
   }
 
