@@ -12,6 +12,11 @@
     width: 100,
     height: 100
   }
+  let clipParams = {
+    dragging: false
+  }
+
+  let ACTIVE_CORNER = ['lt', 'rt', 'rb', 'lb']
   canvas.width = 600
   canvas.height = 600
 
@@ -36,33 +41,55 @@
     let target
     let startPointer
     let movingPointer
+    let activeCorner
 
     setClipCircle(clipBoxStyle)
 
     clipBox.onmousedown = function (e) {
       target = e.target
-      target.dragging = true
+      clipParams.dragging = true
       startPointer = windowToCanvas({
         x: e.clientX,
         y: e.clientY
       })
+      if (hasClass(target, 'first-circle')) {
+        activeCorner = ACTIVE_CORNER[0]
+      } else if (hasClass(target, 'second-circle')) {
+        activeCorner = ACTIVE_CORNER[1]
+      } else if (hasClass(target, 'third-circle')) {
+        activeCorner = ACTIVE_CORNER[2]
+      } else if (hasClass(target, 'fourth-circle')) {
+        activeCorner = ACTIVE_CORNER[3]
+      }
     }
 
-    clipBox.onmousemove = function (e) {
-      if (target && target.dragging) {
+    document.onmousemove = function (e) {
+      e.preventDefault()
+      if (clipParams.dragging) {
+        let params = {}
         movingPointer = windowToCanvas({
           x: e.clientX,
           y: e.clientY
         })
-        setClipCircle({
-          x: clipBoxStyle.x + (movingPointer.x - startPointer.x),
-          y: clipBoxStyle.y + (movingPointer.y - startPointer.y)
-        })
+        params.x = clipBoxStyle.x + (movingPointer.x - startPointer.x)
+        params.y = clipBoxStyle.y + (movingPointer.y - startPointer.y)
+        if (activeCorner === 'lt') {
+          params.width = clipBoxStyle.width - (movingPointer.x - startPointer.x)
+          params.height = clipBoxStyle.height - (movingPointer.y - startPointer.y)
+        } else if (activeCorner === 'rt') {
+          
+        } else if (activeCorner === 'rb') {
+
+        } else if (activeCorner === 'lb') {
+
+        }
+        setClipCircle(params)
+        return false
       }
     }
 
-    clipBox.onmouseup = function (e) {
-      target.dragging = false
+    document.onmouseup = function (e) {
+      clipParams.dragging = false
       setClipBoxStyle({
         x: clipBoxStyle.x + (movingPointer.x - startPointer.x),
         y: clipBoxStyle.y + (movingPointer.y - startPointer.y)
