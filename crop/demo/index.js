@@ -137,11 +137,11 @@
     const { x, y, width, height } = params
     oCanvas.width = width
     oCanvas.height = height
+    // TODO: 性能优化，避免滑动的缓慢
     oContext.drawImage(canvas, x, y, width, height, 0, 0, width, height)
     let testImage = document.querySelector('.test')
     testImage.src = oCanvas.toDataURL()
     clipBox.style.backgroundImage = `url(${oCanvas.toDataURL()})`
-    // oContext.clearRect(0, 0, width, height)
   }
 
   function setClipBoxStyle (options) {
