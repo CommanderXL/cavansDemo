@@ -51,8 +51,9 @@ function throttle (fn, interval) {
 }
 
 // 马赛克算法
-function mosaic (imageData) {
+function mosaic (imageData, options) {
   const { data, width, height } = imageData
+  const { dw, dh } = options
   const len = data.length
   const step = 4
   const hStep = 4
@@ -61,43 +62,54 @@ function mosaic (imageData) {
   const rd = width * 4
   const perPixel = 8 
   
-  const dw = 20
-  const dh = 20
   const I = Math.ceil(width / dw)
   const J = Math.ceil(height / dh)
   const Kw = width % dw
   const Kh = height % dh
-  let a = 0
+
+  function setImageData (data, newIndex, preIndex) {
+    for (let i = 0; i < 4; i++) {
+      data[newIndex + i] = data[preIndex + i]
+    }
+  }
+
   for (let j1 = 0; j1 < J; j1++) {
-    if (j1 !== J) {
-      for (let i1 = 0; i1 < I; i1++) {
-        let baseIndex = j1 * dh * width * 4 + i1 * dw * 4 
+    for (let i1 = 0; i1 < I; i1++) {
+      let baseIndex = j1 * dh * width * 4 + i1 * dw * 4 
+      if (j1 !== J) {
         for (let j2 = 0; j2 < dh; j2++) {
           if (i1 !== I) {
             for (let i2 = 0; i2 < dw; i2++) {
               let _baseIndex = j1 * dh * width * 4 + j2 * width * 4 + i1 * dw * 4 + i2 * 4
-              data[_baseIndex] = data[baseIndex]
-              data[_baseIndex + 1] = data[baseIndex + 1]
-              data[_baseIndex + 2] = data[baseIndex + 2]
-              data[_baseIndex + 3] = data[baseIndex + 3]
+              setImageData(data, _baseIndex, baseIndex)
             }
           } else {
             if (Kw > 0) {
               for (let i3 = 0; i3 < Kw; i3++) {
                 let _baseIndex = j1 * dh * width * 4 + j2 * width * 4 + i1 * dw * 4 + i3 * 4
-                data[_baseIndex] = data[baseIndex]
-                data[_baseIndex + 1] = data[baseIndex + 1]
-                data[_baseIndex + 2] = data[baseIndex + 2]
-                data[_baseIndex + 3] = data[baseIndex + 3]
+                setImageData(data, _baseIndex, baseIndex)
               }
             }
           }
         }
-      }
-    } else {
-      // 如果竖向有多余
-      if (Kh > 0) {
-
+      } else {
+        if (Kh > 0) {
+          for (let j3 = 0; j3 < Kh; j3++) {
+            if (i1 !== I) {
+              for (let i4 = 0; i4 < dw; i4++) {
+                let _baseIndex = j1 * dh * width * 4 + j3 * width * 4 + i1 * dw * 4 + i4 * 4
+                setImageData(data, _baseIndex, baseIndex)
+              }
+            } else {
+              if (Kw > 0) {
+                for (let i5 = 0; i5 < Kw; i5++) {
+                  let _baseIndex = j1 * dh * width * 4 + j3 * width * 4 + i1 * dw * 4 + i5 * 4
+                  setImageData(data, _baseIndex, baseIndex)
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

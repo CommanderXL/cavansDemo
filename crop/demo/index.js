@@ -188,7 +188,10 @@
     hideMask()
     hideClip()
     let imageData = context.getImageData(0, 0, canvas.width, canvas.height)
-    imageData = mosaic(imageData)
+    imageData = mosaic(imageData, {
+      dw: 15,
+      dh: 10
+    })
     // resetContext()
     context.clearRect(0, 0, canvas.width, canvas.height)
     context.putImageData(imageData, 0, 0)
