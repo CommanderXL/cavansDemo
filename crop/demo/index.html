@@ -32,6 +32,7 @@
 
     .clip-box {
       position: absolute;
+      display: none;
       border: 1px dashed #fff;
       z-index: 103;
     }
@@ -75,12 +76,12 @@
     }
 
     #canvas {
-      filter: blur(5px)
     }
   </style>
   <body>
     <ul class="op-ul">
       <li class="op-li">裁剪</li>
+      <li class="op-li">马赛克</li>
     </ul>
     <div class="wrapper">
       <div class="wrapper-mask"></div>
@@ -93,7 +94,7 @@
       <canvas id="canvas"></canvas>
     </div>
     <img src="" alt="" class="test">
-    <script src="./util.js"></script>
+    <script src="./util.js?v=1"></script>
     <script src="./index.js"></script>
   </body>
 </html>

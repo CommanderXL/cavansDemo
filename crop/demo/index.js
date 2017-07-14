@@ -2,7 +2,8 @@
   let canvas = document.querySelector('#canvas')
   let context = canvas.getContext('2d')
   let image = new Image()
-  let clipBtn = document.querySelector('.op-li')
+  let clipBtn = document.querySelectorAll('.op-li')[0]
+  let mosaicBtn = document.querySelectorAll('.op-li')[1]
   let clipBox = document.querySelector('.clip-box')
   let clipCircleBtns = document.querySelectorAll('.clip-circle')
   let wrapperMask = document.querySelector('.wrapper-mask')
@@ -27,10 +28,11 @@
 
   image.src = './favicon.png'
   image.onload = function () {
-    drawOriginalImage()
+    resetContext()
   }
 
-  function drawOriginalImage () {
+  function resetContext () {
+    context.clearRect(0, 0, canvas.width, canvas.height)
     context.drawImage(image, 0, 0, canvas.width, canvas.height)
   }
 
@@ -49,6 +51,7 @@
     let activeCorner
     let params
 
+    showClip()
     setClipCircle(clipBoxStyle)
     setClipBoxBg(clipBoxStyle)
     showMask()
@@ -165,10 +168,29 @@
   }
 
   function hideMask () {
-    wrapperMask.style.display = 'hidden'
+    wrapperMask.style.display = 'none'
+  }
+
+  function showClip () {
+    clipBox.style.display = 'block'
+  }
+
+  function hideClip () {
+    clipBox.style.display = 'none'
   }
 
   clipBtn.onclick = function () {
     initClip()
+  }
+
+  mosaicBtn.onclick = function () {
+    resetContext()
+    hideMask()
+    hideClip()
+    let imageData = context.getImageData(0, 0, canvas.width, canvas.height)
+    imageData = mosaic(imageData)
+    // resetContext()
+    context.clearRect(0, 0, canvas.width, canvas.height)
+    context.putImageData(imageData, 0, 0)
   }
 })()
