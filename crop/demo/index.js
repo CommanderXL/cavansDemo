@@ -126,6 +126,8 @@
       clipParams.dragging = false
       if (clipParams.activeCorner) {
         setClipBoxStyle({
+          x: params.x,
+          y: params.y,
           width: params.width,
           height: params.height
         })
