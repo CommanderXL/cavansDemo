@@ -4,12 +4,15 @@
   let image = new Image()
   let clipBtn = document.querySelectorAll('.op-li')[0]
   let mosaicBtn = document.querySelectorAll('.op-li')[1]
+  let textBtn = document.querySelector('.op-li')[2]
   let clipBox = document.querySelector('.clip-box')
   let clipCircleBtns = document.querySelectorAll('.clip-circle')
   let wrapperMask = document.querySelector('.wrapper-mask')
   let imageData = null
   let oCanvas = document.createElement('canvas')
   let oContext = oCanvas.getContext('2d')
+  let opWrapper = document.querySelector('.op-wrapper')
+  let clipDownloadBtn = document.querySelector('.clip-download')
   
   const OP_CLIP = 'clip'
   const OP_MOSAIC = 'mosaic'
@@ -193,16 +196,38 @@
     clipBox.style.display = 'none'
   }
 
+  function showOpWrapper () {
+    opWrapper.style.display = 'block'
+  }
+
+  function hideOpWrapper () {
+    opWrapper.style.display = 'none'
+  }
+
+  opWrapper.onclick = function (e) {
+    let image = oCanvas.toDataURL()
+    clipDownloadBtn.href = image
+    clipDownloadBtn.download = String(new Date().valueOf())
+  }
+
   clipBtn.onclick = function () {
-    initClip()
+    initClip({
+      op: OP_CLIP
+    })
+    showOpWrapper()
   }
 
   mosaicBtn.onclick = function () {
     resetContext()
     hideMask()
+    hideOpWrapper()
 
     initClip({
       op: OP_MOSAIC
     })
+  }
+
+  textBtn.onclick = function () {
+
   }
 })()

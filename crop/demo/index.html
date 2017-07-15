@@ -22,6 +22,7 @@
       color: #fff;
       margin-right: 10px;
       cursor: pointer;
+      border-radius: 4px;
     }
 
     .wrapper {
@@ -77,12 +78,20 @@
 
     #canvas {
     }
+
+    a:link, a:visited, a:hover, a:active {
+      color: #333;
+    }
   </style>
   <body>
     <ul class="op-ul">
-      <li class="op-li">裁剪</li>
-      <li class="op-li">马赛克</li>
+      <li class="op-li clip">裁剪</li>
+      <li class="op-li mosaic">马赛克</li>
+      <li class="op-li text">文本</li>
     </ul>
+    <div class="op-wrapper">
+      <a class="clip-download">裁剪并导出</a>
+    </div>
     <div class="wrapper">
       <div class="wrapper-mask"></div>
       <div class="clip-box">
