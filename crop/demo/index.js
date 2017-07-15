@@ -11,6 +11,8 @@
   let oCanvas = document.createElement('canvas')
   let oContext = oCanvas.getContext('2d')
   
+  const OP_CLIP = 'clip'
+  const OP_MOSAIC = 'mosaic'
 
   let clipBoxStyle = {
     x: 10,
@@ -44,7 +46,8 @@
     }
   }
 
-  function initClip () {
+  function initClip (options) {
+    const { op } = options
     let target
     let startPointer
     let movingPointer
@@ -53,8 +56,8 @@
 
     showClip()
     setClipCircle(clipBoxStyle)
-    setClipBoxBg(clipBoxStyle)
-    showMask()
+    setClipBoxBg(clipBoxStyle, op)
+    if (op === OP_CLIP) showMask()
 
     clipBox.onmousedown = function (e) {
       target = e.target
@@ -114,7 +117,7 @@
           y: distY,
           width: distW,
           height: distH
-        })
+        }, op)
         return false
       }
     }
@@ -136,15 +139,24 @@
     }
   }
 
-  function setClipBoxBg (params) {
+  function setClipBoxBg (params, op) {
     const { x, y, width, height } = params
+    let clipBoxBg = null
     oCanvas.width = width
     oCanvas.height = height
-    // TODO: 性能优化，避免滑动的缓慢
-    oContext.drawImage(canvas, x, y, width, height, 0, 0, width, height)
-    let testImage = document.querySelector('.test')
-    testImage.src = oCanvas.toDataURL()
-    clipBox.style.backgroundImage = `url(${oCanvas.toDataURL()})`
+    if (op === OP_MOSAIC) {
+      let imageData = context.getImageData(x, y, width, height)
+      imageData = mosaic(imageData, {
+        dw: 10,
+        dh: 10
+      })
+      oContext.putImageData(imageData, 0, 0)
+    } else if (op === OP_CLIP) {
+      // TODO: 性能优化，避免滑动的缓慢
+      oContext.drawImage(canvas, x, y, width, height, 0, 0, width, height)
+    }
+    clipBoxBg = oCanvas.toDataURL()
+    clipBox.style.backgroundImage = `url(${clipBoxBg})`
   }
 
   function setClipBoxStyle (options) {
@@ -186,14 +198,9 @@
   mosaicBtn.onclick = function () {
     resetContext()
     hideMask()
-    hideClip()
-    let imageData = context.getImageData(0, 0, canvas.width, canvas.height)
-    imageData = mosaic(imageData, {
-      dw: 15,
-      dh: 10
+
+    initClip({
+      op: OP_MOSAIC
     })
-    // resetContext()
-    context.clearRect(0, 0, canvas.width, canvas.height)
-    context.putImageData(imageData, 0, 0)
   }
 })()
