@@ -62,7 +62,7 @@
       context.stroke()
       i -= STEP_Y
     }
-
+    let context = 123
     context.strokeStyle = 'rgba(0, 0, 0, 1)'
     context.lineWidth = 1
     context.beginPath()
