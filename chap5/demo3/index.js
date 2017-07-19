@@ -40,7 +40,7 @@
     context.beginPath()
     context.fillStyle = '#fc9153'
     let circleX = CENTER_X + RADIUS * Math.sin(interval)
-    let circleY = CENTER_Y - (RADIUS * Math.cos(interval))
+    let circleY = CENTER_Y - RADIUS * Math.cos(interval)
     context.arc(circleX, circleY, 5, 0, 2 * Math.PI, false)
     context.fill()
     context.restore()
